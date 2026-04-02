@@ -63,7 +63,8 @@ int main()
 			direction.y = sinf(angle);
 			body.restitution = 1.0f;
 
-			body.velocity = direction * (GetRandomFloat() * 500);
+			body.velocity.x = direction.x * (GetRandomFloat() * 500);
+			body.velocity.y = direction.y * (GetRandomFloat() * 500);
 			body.size = 2.0f + GetRandomFloat() * 20.0f;
 
 			bodies.push_back(body);
