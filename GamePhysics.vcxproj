@@ -301,10 +301,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Body.h" />
+    <ClInclude Include="Effector.h" />
     <ClInclude Include="include\resource_dir.h" />
+    <ClInclude Include="Integrator.h" />
+    <ClInclude Include="PointEffector.h" />
+    <ClInclude Include="Random.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Body.cpp" />
+    <ClCompile Include="PointEffector.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\icon.ico" />

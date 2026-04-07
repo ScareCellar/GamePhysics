@@ -8,33 +8,22 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 */
 
 #include <vector>
-//#include <raymath.h>
+//#include <math.h>
 #include "raylib.h"
+#include <raymath.h>
+#include <string>
+#include "../World.h"
+#include "../Body.h"
+#include "../Random.h"
 
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
-struct Body
-{
-	Vector2 position;
-	Vector2 velocity;
-	float mass;
-	Vector2 acceleration;
-	float force;
-	float size;
-	float restitution;
-};
 
-float GetRandomFloat()
-{
-	return GetRandomValue(0, 1000) / 1000.0f;
-}
-
-Vector2 gravity{ 0, 9.81f };
 
 int main()
 {
-	std::vector<Body> bodies;
-	bodies.reserve(1000);
+	World scene;
+	
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
@@ -44,77 +33,56 @@ int main()
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
 
-	// Load a texture from the resources directory
-	Texture wabbit = LoadTexture("wabbit_alpha.png");
-
+	// Physics timestep
+	float timeAccum = 0.0f;
+	float fixedTimeStep = 1.0f / 60.0f;
 	// game loop
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
+
+		std::string fpsText = "FPS: " + std::to_string(GetFPS());
+		DrawText(fpsText.c_str(), 100, 100, 20, RED);
 		float deltaTime = GetFrameTime();
 		Vector2 mousePosition = GetMousePosition();
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			Body body;
 			body.position = mousePosition;
 			body.velocity = Vector2{ 500,0 };
-			body.size = GetRandomValue(5, 20);
-			float angle = GetRandomFloat() * (2 * PI);
+			body.size = Random::GetRandomFloat(5.0f, 20.0f);
+			float angle = Random::GetRandomFloat(1.0f) * (2 * PI);
 			Vector2 direction;
 			direction.x = cosf(angle);
 			direction.y = sinf(angle);
 			body.restitution = 1.0f;
+			body.mass = 1.0f;
 
-			body.velocity.x = direction.x * (GetRandomFloat() * 500);
-			body.velocity.y = direction.y * (GetRandomFloat() * 500);
-			body.size = 2.0f + GetRandomFloat() * 20.0f;
+			body.velocity.x = direction.x * (Random::GetRandomFloat(1.0f) * 500);
+			body.velocity.y = direction.y * (Random::GetRandomFloat(1.0f) * 500);
+			body.acceleration = Vector2{ 0,0 };
+			body.size = 2.0f + Random::GetRandomFloat(1.0f) * 20.0f;
+			body.gravityScale = 1.0f;
 
-			bodies.push_back(body);
+			scene.AddBody(body);
 		}
 
-		for (Body& body : bodies)
-		{
-			if (body.position.x + body.size > GetScreenWidth())
-			{
-				body.position.x = GetScreenWidth() - body.size;
-				body.velocity.x *= -1.0f;
-			}
-			if (body.position.y + body.size > GetScreenHeight())
-			{
-				body.position.x = GetScreenWidth() - body.size;
-				body.velocity.x *= -1.0f;
-			}
-			if (body.position.x - body.size < 0.0f)
-			{
-				body.position.x = 0 + body.size;
-				body.velocity.x *= -1.0f;
-			}
-			if (body.position.y - body.size < 0)
-			{
-				body.position.x = 0 + body.size;
-				body.velocity.x *= -1.0f;
-			}
-			body.position.x += body.velocity.x * deltaTime;
-			body.position.y += body.velocity.y * deltaTime;
-		}
+		
 
 		// UPDATE
-		DrawCircleV(mousePosition, 5, DARKPURPLE);
-
-		for (const Body& body : bodies)
-		{
-			DrawCircleV(body.position, body.size, RED);
+		timeAccum += GetFrameTime();
+		while (timeAccum > fixedTimeStep) {
+			
+			scene.Step(fixedTimeStep);
+			timeAccum -= fixedTimeStep;
 		}
 
+		DrawCircleV(mousePosition, 5, DARKPURPLE);
+		
 		// DRAW
+		scene.Draw();
 		BeginDrawing();
 
 		// Setup the back buffer for drawing (clear color and depth buffers)
 		ClearBackground(BLACK);
-
-		// draw some text using the default font
-		DrawText("Hello Raylib", 200, 200, 20, WHITE);
-
-		// draw our texture to the screen
-		DrawTexture(wabbit, 400, 200, WHITE);
 
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();
@@ -122,9 +90,9 @@ int main()
 
 	// cleanup
 	// unload our texture so it can be cleaned up
-	UnloadTexture(wabbit);
 
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
 	return 0;
 }
+
