@@ -302,7 +302,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Body.h" />
+    <ClInclude Include="Collision.h" />
     <ClInclude Include="Effector.h" />
+    <ClInclude Include="GravityEffector.h" />
     <ClInclude Include="include\resource_dir.h" />
     <ClInclude Include="Integrator.h" />
     <ClInclude Include="PointEffector.h" />
@@ -311,6 +313,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Body.cpp" />
+    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="GravityEffector.cpp" />
     <ClCompile Include="PointEffector.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="World.cpp" />

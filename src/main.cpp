@@ -15,6 +15,7 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "../World.h"
 #include "../Body.h"
 #include "../Random.h"
+#include "../GravityEffector.h"
 
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
@@ -23,6 +24,8 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 int main()
 {
 	World scene;
+	//GravityEffector* effector = new GravityEffector(10000);
+	//scene.AddEffector(new GravityEffector(100));
 	
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
@@ -47,20 +50,22 @@ int main()
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
 			Body body;
 			body.position = mousePosition;
-			body.velocity = Vector2{ 500,0 };
+			body.velocity = Vector2{ 0,0 };
 			body.size = Random::GetRandomFloat(5.0f, 20.0f);
 			float angle = Random::GetRandomFloat(1.0f) * (2 * PI);
 			Vector2 direction;
 			direction.x = cosf(angle);
 			direction.y = sinf(angle);
 			body.restitution = 1.0f;
-			body.mass = 1.0f;
+			body.bodyType = BodyType::Dynamic;
 
-			body.velocity.x = direction.x * (Random::GetRandomFloat(1.0f) * 500);
-			body.velocity.y = direction.y * (Random::GetRandomFloat(1.0f) * 500);
+			//body.velocity.x = direction.x * (Random::GetRandomFloat(1.0f) * 500);
+			//body.velocity.y = direction.y * (Random::GetRandomFloat(1.0f) * 500);
 			body.acceleration = Vector2{ 0,0 };
 			body.size = 2.0f + Random::GetRandomFloat(1.0f) * 20.0f;
-			body.gravityScale = 1.0f;
+			body.gravityScale = 0.0f;
+			body.mass = body.size;
+			body.inverseMass = 1 / body.mass;
 
 			scene.AddBody(body);
 		}

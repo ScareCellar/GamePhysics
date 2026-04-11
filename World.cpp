@@ -2,38 +2,19 @@
 #include "Integrator.h"
 #include <raylib.h>
 #include <raymath.h>
+#include "GravityEffector.h"
 
 
 
 void World::Step(float dt)
 {
-	for (Body& body : bodies)
-	{
+	for (Effector* effector : effectors) {
+		effector->Apply(bodies);
+	}
+	UpdateCollision();
+	for (Body& body : bodies) {
 		SemiImplicitEuler(body, dt);
-		if (body.position.x + body.size > GetScreenWidth())
-		{
-			body.position.x = GetScreenWidth() - body.size;
-			body.velocity.x *= -1.0f;
-		}
-		if (body.position.y + body.size > GetScreenHeight())
-		{
-			body.position.y = GetScreenHeight() - body.size;
-			body.velocity.y *= -1.0f;
-		}
-		if (body.position.x - body.size < 0.0f)
-		{
-			body.position.x = 0 + body.size;
-			body.velocity.x *= -1.0f;
-		}
-		if (body.position.y - body.size < 0)
-		{
-			body.position.y = 0 + body.size;
-			body.velocity.y *= -1.0f;
-		}
-		body.position.x += body.velocity.x * dt;
-		body.position.y += body.velocity.y * dt;
-
-		for (Body& body : bodies) body.acceleration = gravity * body.gravityScale * 100.0f;
+		body.acceleration = gravity * body.gravityScale * 100.0f;
 	}
 
 	if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
@@ -60,4 +41,42 @@ void World::Draw()
 void World::AddBody(const Body& body)
 {
 	bodies.push_back(body);
+}
+
+void World::AddEffector(Effector* effector)
+{
+	effectors.push_back(effector);
+}
+
+void World::UpdateCollision() {
+	contacts.clear();
+	CreateContacts(bodies, contacts);
+	SeparateContacts(contacts);
+
+	for (Body& body : bodies)
+	{
+		if (body.position.x + body.size > GetScreenWidth())
+		{
+			body.position.x = GetScreenWidth() - body.size;
+			body.velocity.x *= -1.0f;
+		}
+		if (body.position.y + body.size > GetScreenHeight())
+		{
+			body.position.y = GetScreenHeight() - body.size;
+			body.velocity.y *= -1.0f;
+		}
+		if (body.position.x - body.size < 0.0f)
+		{
+			body.position.x = 0 + body.size;
+			body.velocity.x *= -1.0f;
+		}
+		if (body.position.y - body.size < 0)
+		{
+			body.position.y = 0 + body.size;
+			body.velocity.y *= -1.0f;
+		}
+		//body.position.x += body.velocity.x * dt;
+		//body.position.y += body.velocity.y * dt;
+
+	}
 }

@@ -36,9 +36,17 @@
     <ClInclude Include="Integrator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="World.h" />
     <ClInclude Include="Random.h">
       <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="GravityEffector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -48,8 +56,16 @@
     <ClCompile Include="PointEffector.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp" />
     <ClCompile Include="src\main.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GravityEffector.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>

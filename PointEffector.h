@@ -10,7 +10,7 @@ public:
 
 	}
 		// Inherited via Effector
-	void Apply(std::vector<Body> bodies) override;
+	void Apply(std::vector<Body>& bodies) override;
 	void Draw();
 
 private: 

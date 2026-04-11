@@ -1,6 +1,6 @@
 #include "PointEffector.h"
 
-void PointEffector::Apply(std::vector<Body> bodies)
+void PointEffector::Apply(std::vector<Body>& bodies)
 {
 	
 }
