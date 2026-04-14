@@ -23,7 +23,7 @@ struct Body
 	Vector2 velocity{0,0};
 	Vector2 acceleration{0,0};
 	float mass = 1.0f;
-	float inverseMass;
+	float inverseMass = 1.0f;
 	float force = 0.0f;
 	float size = 1.0f;
 	float restitution = 1.0f;
@@ -34,6 +34,6 @@ struct Body
 
 	void Draw();
 
-	void AddForce(Vector2 force);
+	void AddForce(Vector2 force, ForceMode forcemode = ForceMode::Force);
 };
 

@@ -47,7 +47,7 @@ int main()
 		DrawText(fpsText.c_str(), 100, 100, 20, RED);
 		float deltaTime = GetFrameTime();
 		Vector2 mousePosition = GetMousePosition();
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)) {
 			Body body;
 			body.position = mousePosition;
 			body.velocity = Vector2{ 0,0 };
@@ -57,10 +57,15 @@ int main()
 			direction.x = cosf(angle);
 			direction.y = sinf(angle);
 			body.restitution = 1.0f;
-			body.bodyType = BodyType::Dynamic;
-
-			//body.velocity.x = direction.x * (Random::GetRandomFloat(1.0f) * 500);
-			//body.velocity.y = direction.y * (Random::GetRandomFloat(1.0f) * 500);
+			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+				body.bodyType = BodyType::Dynamic;
+				body.velocity.x = direction.x * (Random::GetRandomFloat(1.0f) * 500);
+				body.velocity.y = direction.y * (Random::GetRandomFloat(1.0f) * 500);
+			}
+			else {
+				body.bodyType = BodyType::Static;
+			}
+			
 			body.acceleration = Vector2{ 0,0 };
 			body.size = 2.0f + Random::GetRandomFloat(1.0f) * 20.0f;
 			body.gravityScale = 0.0f;
@@ -69,6 +74,7 @@ int main()
 
 			scene.AddBody(body);
 		}
+		
 
 		
 

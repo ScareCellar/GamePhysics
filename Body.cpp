@@ -12,8 +12,25 @@ void Body::Draw()
 	DrawCircleLinesV(position, size, BLUE);
 }
 
-void Body::AddForce(Vector2 force)
+void Body::AddForce(Vector2 force, ForceMode forcemode)
 {
 	if (bodyType != BodyType::Dynamic) return;
-	acceleration += force;
+
+	switch (forcemode)
+	{
+	case ForceMode::Force:
+		acceleration += force * inverseMass;
+		break;
+	case ForceMode::Impulse:
+		velocity += force * inverseMass;
+		break;
+	case ForceMode::Acceleration:
+		acceleration += force;
+		break;
+	case ForceMode::VelocityChange:
+		velocity += force;
+		break;
+	default:
+		break;
+	}
 }
