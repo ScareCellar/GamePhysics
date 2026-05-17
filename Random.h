@@ -4,7 +4,7 @@
 class Random {
 public:
 	inline static float GetRandomFloat(float max) {
-		return GetRandomValue(0, max * 1000) / 1000.0f;
+		return static_cast<float>(GetRandomValue(0, max * 1000) / 1000.0f);
 	}
 
 	inline static float GetRandomFloat(float min, float max) {

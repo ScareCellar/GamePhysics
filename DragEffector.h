@@ -1,18 +1,17 @@
 #pragma once
 #include "Effector.h"
 
-class PointEffector : public Effector {
+class DragEffector : public Effector {
 public:
-	PointEffector(Vector2 position, float size, float forceMagnitude) :
-		Effector{position, size},
+	DragEffector(Vector2 position, float size, float forceMagnitude) :
+		Effector{ position, size },
 		forceMagnitude{ forceMagnitude } {
-
 	}
-		// Inherited via Effector
+	// Inherited via Effector
 	void Apply(std::vector<Body>& bodies) override;
 	void Draw() override;
 
-private: 
-	
+private:
+
 	float forceMagnitude;
 };

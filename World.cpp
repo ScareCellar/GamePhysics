@@ -11,7 +11,9 @@ void World::Step(float dt)
 	for (Effector* effector : effectors) {
 		effector->Apply(bodies);
 	}
-	UpdateCollision();
+	for (int i = 0; i < 4; i++) {
+		UpdateCollision();
+	}
 	for (Body& body : bodies) {
 		SemiImplicitEuler(body, dt);
 		body.acceleration = gravity * body.gravityScale * 100.0f;
@@ -33,6 +35,9 @@ void World::Step(float dt)
 
 void World::Draw()
 {
+	for (Effector*& effector : effectors) {
+		effector->Draw();
+	}
 	for (Body& body : bodies) {
 		body.Draw();
 	}

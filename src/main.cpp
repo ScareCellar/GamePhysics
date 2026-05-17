@@ -16,6 +16,9 @@ by Jeffery Myers is marked with CC0 1.0. To view a copy of this license, visit h
 #include "../Body.h"
 #include "../Random.h"
 #include "../GravityEffector.h"
+#include "../PointEffector.h"
+#include "../AreaEffector.h"
+#include "../DragEffector.h"
 
 #include "resource_dir.h"	// utility header for SearchAndSetResourceDir
 
@@ -26,7 +29,7 @@ int main()
 	World scene;
 	//GravityEffector* effector = new GravityEffector(10000);
 	//scene.AddEffector(new GravityEffector(100));
-	
+
 	// Tell the window to use vsync and work on high DPI displays
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
@@ -39,13 +42,26 @@ int main()
 	// Physics timestep
 	float timeAccum = 0.0f;
 	float fixedTimeStep = 1.0f / 60.0f;
+	bool simulate = true;
+
+	scene.AddEffector(new GravityEffector(Vector2{ 900, 600 }, 200, 350000.0f));
+	scene.AddEffector(new PointEffector(Vector2{ 300, 200 }, 200, 30000.0f));
+	
+	scene.AddEffector(new AreaEffector(Vector2{ 900, 200 }, 200, 30000.0f, Vector2{0,1}));
+	scene.AddEffector(new DragEffector(Vector2{ 300, 600 }, 200, 10.0f));
+
 	// game loop
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
 
 		std::string fpsText = "FPS: " + std::to_string(GetFPS());
 		DrawText(fpsText.c_str(), 100, 100, 20, RED);
-		float deltaTime = GetFrameTime();
+		float deltaTime = fminf(GetFrameTime(), 0.1f);
+
+		if (IsKeyPressed(KEY_SPACE)) {
+			simulate = !simulate;
+		}
+
 		Vector2 mousePosition = GetMousePosition();
 		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE)) {
 			Body body;
@@ -65,7 +81,7 @@ int main()
 			else {
 				body.bodyType = BodyType::Static;
 			}
-			
+
 			body.acceleration = Vector2{ 0,0 };
 			body.size = 2.0f + Random::GetRandomFloat(1.0f) * 20.0f;
 			body.gravityScale = 0.0f;
@@ -74,26 +90,28 @@ int main()
 
 			scene.AddBody(body);
 		}
-		
 
-		
 
-		// UPDATE
-		timeAccum += GetFrameTime();
-		while (timeAccum > fixedTimeStep) {
-			
-			scene.Step(fixedTimeStep);
-			timeAccum -= fixedTimeStep;
+
+		if (simulate) {
+			// UPDATE
+			timeAccum += GetFrameTime();
+			while (timeAccum > fixedTimeStep) {
+
+				scene.Step(fixedTimeStep);
+				timeAccum -= fixedTimeStep;
+			}
 		}
+		//world.AddEffector(new GravitationEffector(Vector2{ 900, 600 }, 200, 30000.0f));
 
 		DrawCircleV(mousePosition, 5, DARKPURPLE);
-		
+
 		// DRAW
 		scene.Draw();
 		BeginDrawing();
 
 		// Setup the back buffer for drawing (clear color and depth buffers)
-		ClearBackground(BLACK);
+		ClearBackground(WHITE);
 
 		// end the frame and get ready for the next one  (display frame, poll input, etc...)
 		EndDrawing();

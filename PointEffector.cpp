@@ -1,11 +1,19 @@
 #include "PointEffector.h"
 
-void PointEffector::Apply(std::vector<Body>& bodies)
+void PointEffector::Apply(std::vector<Body>& ibodies)
 {
-	
+	std::vector<Body*> bodies;
+	CollectCollidingBodies(ibodies, bodies);
+
+	for (auto& body : bodies) {
+		Vector2 direction = body->position - position;
+		Vector2 force = Vector2Normalize(direction) * forceMagnitude;
+		body->AddForce(force);
+	}
 }
 
 void PointEffector::Draw()
 {
-	DrawCircleLinesV(position, size, WHITE);
+	Effector::Draw();
+	DrawCircleV(position, size, Fade(RED, 0.2f));
 }

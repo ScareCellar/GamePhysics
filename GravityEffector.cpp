@@ -2,14 +2,17 @@
 #include <raylib.h>
 #include "raymath.h"
 
-void GravityEffector::Apply(std::vector<Body>& bodies)
+void GravityEffector::Apply(std::vector<Body>& ibodies)
 {
+    std::vector<Body*> bodies;
+    CollectCollidingBodies(ibodies, bodies);
+
     for (size_t i = 0; i < bodies.size(); i++)
     {
         for (size_t j = i + 1; j < bodies.size(); j++)
         {
-            Body& bodyA = bodies[i];
-            Body& bodyB = bodies[j];
+            Body& bodyA = *bodies[i];
+            Body& bodyB = *bodies[j];
 
             // STEP 1: Direction vector
             Vector2 direction = bodyA.position - bodyB.position;
@@ -34,4 +37,10 @@ void GravityEffector::Apply(std::vector<Body>& bodies)
             bodyB.AddForce(force);
         }
     }
+}
+
+void GravityEffector::Draw()
+{
+    Effector::Draw();
+    DrawCircleV(position, size, Fade(PURPLE, 0.2f));
 }
