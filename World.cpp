@@ -4,7 +4,7 @@
 #include <raymath.h>
 #include "GravityEffector.h"
 
-
+Vector2 World::gravity = { 0, 9.8f };
 
 void World::Step(float dt)
 {
@@ -14,10 +14,7 @@ void World::Step(float dt)
 	for (int i = 0; i < 4; i++) {
 		UpdateCollision();
 	}
-	for (Body& body : bodies) {
-		SemiImplicitEuler(body, dt);
-		body.acceleration = gravity * body.gravityScale * 100.0f;
-	}
+	for (Body& body : bodies) body.AddForce(gravity * body.gravityScale, ForceMode::Acceleration);
 
 	if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) {
 		for (Body& body : bodies) {
@@ -31,6 +28,7 @@ void World::Step(float dt)
 
 		DrawCircleLinesV(GetMousePosition(), 100.0f, WHITE);
 	}
+	for (Body& body : bodies) body.acceleration = Vector2{ 0,0 };
 }
 
 void World::Draw()
@@ -53,36 +51,49 @@ void World::AddEffector(Effector* effector)
 	effectors.push_back(effector);
 }
 
+Body* World::GetBodyIntersect(const Vector2& position)
+{
+	for (Body& body : bodies) {
+		if (CheckCollisionPointCircle(position, body.position, body.size)) {
+			return &body;
+		}
+	}
+	return nullptr;
+}
+
 void World::UpdateCollision() {
 	contacts.clear();
 	CreateContacts(bodies, contacts);
 	SeparateContacts(contacts);
 	ResolveContacts(contacts);
 
-	for (Body& body : bodies)
+	// collision
+	for (auto& body : bodies)
 	{
-		if (body.position.x + body.size > GetScreenWidth())
+		if (body.position.x + body.size > boundsMax.x)
 		{
-			body.position.x = GetScreenWidth() - body.size;
-			body.velocity.x *= -1.0f;
+			body.position.x = boundsMax.x - body.size;
+			// set body velocity x with restitution
+			body.velocity.x = -body.velocity.x * body.restitution;
 		}
-		if (body.position.y + body.size > GetScreenHeight())
+		if (body.position.x - body.size < boundsMin.x)
 		{
-			body.position.y = GetScreenHeight() - body.size;
-			body.velocity.y *= -1.0f;
+			body.position.x = boundsMin.x + body.size;
+			body.velocity.x = -body.velocity.x * body.restitution;
+			// set body velocity x with restitution
 		}
-		if (body.position.x - body.size < 0.0f)
+		if (body.position.y + body.size > boundsMax.y)
 		{
-			body.position.x = 0 + body.size;
-			body.velocity.x *= -1.0f;
+			body.position.y = boundsMax.y - body.size;
+			body.velocity.y = -body.velocity.y * body.restitution;
+			// body velocity y
 		}
-		if (body.position.y - body.size < 0)
+		if (body.position.y - body.size < boundsMin.y)
 		{
-			body.position.y = 0 + body.size;
-			body.velocity.y *= -1.0f;
+			body.position.y = boundsMax.y + body.size;
+			body.velocity.y = -body.velocity.y * body.restitution;
+			// body position y
+			// body velocity y
 		}
-		//body.position.x += body.velocity.x * dt;
-		//body.position.y += body.velocity.y * dt;
-
 	}
 }

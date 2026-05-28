@@ -2,7 +2,17 @@
 #include <vector>
 #include "body.h"
 
+enum class EffectorType
+{
+	Gravitation,
+	Point,
+	Area,
+	Drag
+};
+
 class Effector {
+
+
 public:
 	Effector(Vector2 position, float size) : position{ position }, size{ size } {}
 	virtual void Apply(std::vector<Body>& bodies) = 0;

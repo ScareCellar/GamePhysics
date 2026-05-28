@@ -311,7 +311,11 @@
     <ClInclude Include="Integrator.h" />
     <ClInclude Include="PointEffector.h" />
     <ClInclude Include="Random.h" />
+    <ClInclude Include="Spring.h" />
+    <ClInclude Include="src\gui_physics.h" />
+    <ClInclude Include="src\raygui.h" />
     <ClInclude Include="World.h" />
+    <ClInclude Include="world_camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AreaEffector.cpp" />
@@ -321,8 +325,10 @@
     <ClCompile Include="Effector.cpp" />
     <ClCompile Include="GravityEffector.cpp" />
     <ClCompile Include="PointEffector.cpp" />
+    <ClCompile Include="Spring.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="World.cpp" />
+    <ClCompile Include="world_camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\icon.ico" />
