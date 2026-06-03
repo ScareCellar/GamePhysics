@@ -1,5 +1,5 @@
-#Game Physics Engine
-#Spring 2026
+# Game Physics Engine
+# Spring 2026
 
 A custom physics sandbox developed for my Game Physics course during the Spring 2026 quarter. The engine demonstrates real-time physics simulation through rigid body dynamics, collision detection and response, gravity, spring constraints, object separation, force effectors, and interactive GUI controls.
 
