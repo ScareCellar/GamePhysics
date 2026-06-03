@@ -1,16 +1,16 @@
-# Game Physics Engine
-# Spring 2026
+### Game Physics Engine
+## Spring 2026
 
 A custom physics sandbox developed for my Game Physics course during the Spring 2026 quarter. The engine demonstrates real-time physics simulation through rigid body dynamics, collision detection and response, gravity, spring constraints, object separation, force effectors, and interactive GUI controls.
 
-Overview
+# Overview
 
 This project was created to explore and implement the fundamental systems found in modern game physics engines. Users can construct dynamic scenes by spawning bodies, connecting them with springs, and introducing force effectors to create complex physical interactions.
 
 The simulation is designed as a sandbox environment that encourages experimentation and visualization of physical behavior in real time.
 
-Controls
-Spawning Bodies
+## Controls
+# Spawning Bodies
 
 Left-click anywhere in the simulation window to create a new physics body. The body's properties are determined by the values currently specified in the GUI.
 
