@@ -1,4 +1,4 @@
-## Game Physics Engine
+# Game Physics Engine
 ## Spring 2026
 
 A custom physics sandbox developed for my Game Physics course during the Spring 2026 quarter. The engine demonstrates real-time physics simulation through rigid body dynamics, collision detection and response, gravity, spring constraints, object separation, force effectors, and interactive GUI controls.
@@ -10,25 +10,25 @@ This project was created to explore and implement the fundamental systems found 
 The simulation is designed as a sandbox environment that encourages experimentation and visualization of physical behavior in real time.
 
 ## Controls
-# Spawning Bodies
+### Spawning Bodies
 
 Left-click anywhere in the simulation window to create a new physics body. The body's properties are determined by the values currently specified in the GUI.
 
 For rapid spawning, hold Left Control while left-clicking. This allows multiple bodies to be created in quick succession and is useful for testing collision handling and large-scale interactions.
 
-# Creating Springs
+### Creating Springs
 
 To connect two bodies with a spring, press and hold the right mouse button on a body and drag to another body. Once the connection is visibly established, release the right mouse button to create the spring constraint.
 
 Springs can be used to construct chains, pendulums, bridges, and other interconnected systems.
 
-# Spawning Effectors
+### Spawning Effectors
 
 Hold Shift and left-click to create an effector. The effector's properties are determined by the values currently specified in the GUI.
 
 Effectors apply forces that influence nearby bodies, allowing for a variety of dynamic interactions within the simulation.
 
-# Pausing the Simulation
+### Pausing the Simulation
 
 Press Space to pause or resume the simulation. This can be useful for inspecting the state of the system or analyzing interactions at specific moments in time.
 
