@@ -29,6 +29,7 @@ struct Body
 	float restitution = 1.0f;
 	float damping = 0.1f;
 	float gravityScale = 1.0f;
+	Color color = RED;
 
 	void Step(float dt);
 

@@ -10,13 +10,15 @@ public:
 
 	float restingLength;
 	float force;
+	float damping;
 
 	Spring() = default;
-	Spring(Body* bodyA, Body* bodyB, float restingLength, float force) : 
+	Spring(Body* bodyA, Body* bodyB, float restingLength, float force, float damping = 1) : 
 		bodyA{ bodyA }, 
 		bodyB{ bodyB }, 
 		restingLength{ restingLength }, 
-		force{ force } 
+		force{ force },
+		damping{ damping }
 	{ }
 
 	void Apply(float multiplier = 1);

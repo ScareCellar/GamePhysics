@@ -1,4 +1,5 @@
 #include "Body.h"
+#include "world_camera.h"
 
 void Body::Step(float dt)
 {
@@ -8,8 +9,8 @@ void Body::Step(float dt)
 
 void Body::Draw()
 {
-	DrawCircleV(position, size, RED);
-	DrawCircleLinesV(position, size, BLUE);
+	DrawCircleV(position, size, color);
+	DrawCircleLinesV(position, size, WHITE);
 }
 
 void Body::AddForce(Vector2 force, ForceMode forcemode)

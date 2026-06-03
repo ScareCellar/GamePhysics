@@ -41,8 +41,9 @@ bool mouseOverGui;
 
 int main()
 {
+	InitWindow(1280, 800, "Hello Raylib");
 	World scene;
-	WorldCamera sceneCamera(Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }, 5);
+	WorldCamera sceneCamera(Vector2{ GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }, 10);
 	// set min (left-bottom) boundary(0, screen height) and max (right, top) boundary(screen width, 0)
 	scene.SetBounds(sceneCamera.ScreenToWorld({ 0, (float)GetScreenHeight() }), sceneCamera.ScreenToWorld({ (float)GetScreenWidth(), 0 }));
 	//GravityEffector* effector = new GravityEffector(10000);
@@ -52,7 +53,6 @@ int main()
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
 	// Create the window and OpenGL context
-	InitWindow(1280, 800, "Hello Raylib");
 
 	// Get GUI state
 	state = InitGuiPhysics();
@@ -107,17 +107,39 @@ int main()
 			if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
 				selectedBody = scene.GetBodyIntersect(mousePosition);
 			}
-			if (selectedBody) {
-				if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && IsKeyDown(KEY_LEFT_CONTROL)) {
-					Vector2 position = mousePosition;
-					Vector2 force = Spring::GetSpringForce(position, selectedBody->position, 1.0f, 3.0f);
-					selectedBody->AddForce(force);
+			// spring
+			if (selectedBody)
+			{
+				if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+				{
+					Vector2 position = sceneCamera.ScreenToWorld(GetMousePosition());
+					if (IsKeyDown(KEY_LEFT_CONTROL))
+					{
+						Vector2 force = Spring::GetSpringForce(position, selectedBody->position, 1.0f, 3.0f);
+						selectedBody->AddForce(force);
+					}
+					else
+					{
+						connectedBody = scene.GetBodyIntersect(sceneCamera.ScreenToWorld(GetMousePosition()));
+					}
+					DrawLineV(sceneCamera.WorldToScreen(position), sceneCamera.WorldToScreen(selectedBody->position), WHITE);
+				}
+				else
+				{
+					if (selectedBody && connectedBody)
+					{
+						float distance = Vector2Distance(sceneCamera.ScreenToWorld(selectedBody->position), sceneCamera.ScreenToWorld(connectedBody->position));
+						scene.AddSpring(selectedBody, connectedBody, distance, state.SpringStiffnessValue);
+					}
+
+					selectedBody = nullptr;
+					connectedBody = nullptr;
 				}
 			}
 		}
 
 
-
+		scene.SetGravity(state.GravityValue);
 
 		if (state.SimulateActive) {
 			// UPDATE
@@ -159,39 +181,30 @@ int main()
 	return 0;
 }
 
-void AddBody(World& scene, WorldCamera& camera) {
+void AddBody(World& world, WorldCamera& camera)
+{
 	Body body;
+
 	body.bodyType = (BodyType)state.BodyTypeActive;
 	body.position = camera.ScreenToWorld(GetMousePosition());
-	body.velocity = Vector2{ 0,0 };
-	body.size = state.BodySizeValue;
+
 	float angle = Random::GetRandomFloat(1.0f) * (2 * PI);
-	body.restitution = 1.0f;
 	Vector2 direction;
 	direction.x = cosf(angle);
 	direction.y = sinf(angle);
 
-	if (body.bodyType == BodyType::Dynamic) {
-		body.velocity.x = direction.x * (Random::GetRandomFloat(1.0f));
-		body.velocity.y = direction.y * (Random::GetRandomFloat(1.0f));
-	}
-	//if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-	//	body.bodyType = BodyType::Dynamic;
-	//	body.velocity.x = direction.x * (Random::GetRandomFloat(1.0f) * 500);
-	//	body.velocity.y = direction.y * (Random::GetRandomFloat(1.0f) * 500);
-	//}
-	//else {
-	//	body.bodyType = BodyType::Static;
-	//}
+	body.AddForce((direction * state.BodyVelocityValue), ForceMode::VelocityChange);
 
-	body.acceleration = Vector2{ 0,0 };
 	body.size = state.BodySizeValue;
+	body.restitution = state.BodyRestitutionValue;
+	body.mass = state.BodyMassValue * state.BodyMassValue;
+	body.inverseMass = (body.bodyType == BodyType::Static) ? 0 : 1.0f / body.mass;
 	body.gravityScale = state.BodyGravityValue;
-	body.mass = body.size * state.BodyMassValue;
-	body.inverseMass = 1 / body.mass;
+	body.damping = state.BodyDampingValue;
+	body.color = ColorFromHSV(GetRandomValue(0, 360), 1.0f, 1.0f);
 
-	scene.AddBody(body);
-}
+	world.AddBody(body);
+};
 
 void AddEffector(World& scene, WorldCamera& camera)
 {

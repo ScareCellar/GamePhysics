@@ -123,9 +123,9 @@ GuiPhysicsState InitGuiPhysics(void)
     state.PhysicsPanelActive = true;
     state.BodyMassValue = 1.0f;
     state.BodySizeValue = 1.0f;
-    state.BodyGravityValue = 0.0f;
+    state.BodyGravityValue = 1.0f;
     state.BodyRestitutionValue = 0.5f;
-    state.BodyDampingValue = 1.0f;
+    state.BodyDampingValue = 0.1f;
     state.BodyTypeEditMode = false;
     state.BodyTypeActive = 0;
     state.SpringStiffnessValue = 0.0f;
@@ -139,7 +139,7 @@ GuiPhysicsState InitGuiPhysics(void)
     state.EffectorAngleValue = 0.0f;
     state.SimulateActive = true;
     state.GravityValue = 0.0f;
-    state.FPSValue = 0.0f;
+    state.FPSValue = 60.0f;
     state.BodyVelocityValue = 0.0f;
     state.SpringMultiplierValue = 0.0f;
     state.WindowBox023Active = true;
@@ -173,7 +173,7 @@ void GuiPhysics(GuiPhysicsState *state)
         GuiToggle(Rectangle{ state->anchor02.x + 32, state->anchor02.y + 624, 240, 24 }, "SIMULATE", &state->SimulateActive);
         GuiSlider(Rectangle{ state->anchor02.x + 80, state->anchor02.y + 568, 184, 16 }, "GRAVITY", GUI_TEXT(state->GravityValue), &state->GravityValue, -10, 10);
         GuiSliderBar(Rectangle{ state->anchor02.x + 80, state->anchor02.y + 544, 184, 16 }, "FPS", GUI_TEXT(state->FPSValue), &state->FPSValue, 1, 120);
-        GuiSliderBar(Rectangle{ state->anchor02.x + 80, state->anchor02.y + 208, 184, 16 }, "VELOCITY", NULL, &state->BodyVelocityValue, 0, 100);
+        GuiSliderBar(Rectangle{ state->anchor02.x + 80, state->anchor02.y + 208, 184, 16 }, "VELOCITY", NULL, &state->BodyVelocityValue, 1, 100);
         GuiGroupBox(Rectangle{ state->anchor02.x + 8, state->anchor02.y + 32, 296, 208 }, "BODY");
         GuiSliderBar(Rectangle{ state->anchor02.x + 80, state->anchor02.y + 592, 184, 16 }, "SPRING X", NULL, &state->SpringMultiplierValue, 0, 100);
         if (GuiDropdownBox(Rectangle{ state->anchor02.x + 32, state->anchor02.y + 48, 240, 24 }, "DYNAMIC;KINEMATIC;STATIC", &state->BodyTypeActive, state->BodyTypeEditMode)) state->BodyTypeEditMode = !state->BodyTypeEditMode;
